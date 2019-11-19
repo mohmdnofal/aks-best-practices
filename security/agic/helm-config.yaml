@@ -1,0 +1,50 @@
+# This file contains the essential configs for the ingress controller helm chart
+
+# Verbosity level of the App Gateway Ingress Controller
+verbosityLevel: 3
+
+################################################################################
+# Specify which application gateway the ingress controller will manage
+#
+appgw:
+    subscriptionId: "2db66428-abf9-440c-852f-641430aa8173"
+    resourceGroup: "sec-webinar"
+    name: "aks-agic"
+
+    # Setting appgw.shared to "true" will create an AzureIngressProhibitedTarget CRD.
+    # This prohibits AGIC from applying config for any host/path.
+    # Use "kubectl get AzureIngressProhibitedTargets" to view and change this.
+    shared: false
+
+################################################################################
+# Specify which kubernetes namespace the ingress controller will watch
+# Default value is "default"
+# Leaving this variable out or setting it to blank or empty string would
+# result in Ingress Controller observing all acessible namespaces.
+#
+# kubernetes:
+#   watchNamespace: <namespace>
+
+################################################################################
+# Specify the authentication with Azure Resource Manager
+#
+# Two authentication methods are available:
+# - Option 1: AAD-Pod-Identity (https://github.com/Azure/aad-pod-identity)
+armAuth:
+    type: aadPodIdentity
+    identityResourceID: "/subscriptions/2db66428-abf9-440c-852f-641430aa8173/resourcegroups/MC_sec-webinar_aks-sec-webinar_westeurope/providers/Microsoft.ManagedIdentity/userAssignedIdentities/aks-agic"
+    identityClientID:  "fb2719f1-683b-481e-95d2-c0b5164c5fa0"
+
+## Alternatively you can use Service Principal credentials
+# armAuth:
+#    type: servicePrincipal
+#    secretJSON: <<Generate this value with: "az ad sp create-for-rbac --subscription <subscription-uuid> --sdk-auth | base64 -w0" >>
+
+################################################################################
+# Specify if the cluster is RBAC enabled or not
+rbac:
+    enabled: true # true/false
+
+# Specify aks cluster related information. THIS IS BEING DEPRECATED.
+aksClusterConfiguration:
+    apiServerAddress: aks-sec-we-sec-webinar-2db664-492b36d4.hcp.westeurope.azmk8s.io

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-v2
+  labels:
+    app: myapp-v1
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: myapp-v1
+  template:
+    metadata:
+      labels:
+        app: myapp-v1
+    spec:
+      containers:
+      - name: myapp-v2
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: agentpool
+                operator: In
+                values:
+                - node1418

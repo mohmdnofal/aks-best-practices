@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: webinar
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: 10000M
+    limits.cpu: "10"
+    limits.memory: 10000M
+    

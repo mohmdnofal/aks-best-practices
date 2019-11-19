@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cosmoscats-north
+  labels:
+    location: northeurope
+spec:
+  containers:
+  - name: cosmoscats-north
+    image: mohamman/cosmoscats:v1
+    env:
+    - name: COSMOCATS_COSMOSDB_ENDPOINT
+      value: "CHANGEME"
+    - name: COSMOCATS_COSMOSDB_KEY
+      value: "CHANGEME"
+    

@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cosmoscats
+  namespace: webinar
+  labels:
+    location: westeurope
+    app: cosmoscats
+    aadpodidbinding: keyvault-webinar
+spec:
+  containers:
+  - name: cosmoscats
+    image: mohamman/cosmoscats:v3
+    imagePullPolicy: Always
+    securityContext:
+      allowPrivilegeEscalation: false
+    ports:
+    - containerPort: 80
+    env:
+        - name: COSMOCATS_CONFIGURATION_TYPE
+          value: FS
+        - name: COSMOCATS_COSMOSDB_ENDPOINT
+          value: /kvmnt/CosmosdbEndpoint
+        - name: COSMOCATS_COSMOSDB_KEY
+          value: /kvmnt/CosmosdbKey
+    resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+    volumeMounts:
+    - name: cosmossecret
+      mountPath: /kvmnt
+      readOnly: true
+  volumes:
+        - name: cosmossecret
+          flexVolume:
+            driver: "azure/kv"
+            options:
+              usepodidentity: "true"
+              keyvaultname: webinar-kv
+              keyvaultobjectnames: CosmosdbEndpoint;CosmosdbKey # Name of Key Vault secret
+              keyvaultobjecttypes: secret;secret
+              keyvaultobjectversions: ""     # [OPTIONAL] list of KeyVault object versions (semi-colon separated), will get latest if empty
+              resourcegroup: sec-webinar
+              subscriptionid: xxxxx-xxxxx-xxxx-xxxxx-xxxxxx
+              tenantid: xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
