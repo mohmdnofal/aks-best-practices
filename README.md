@@ -10,4 +10,4 @@ In this repo you will find slides, transcript, and demos for different topics re
 * [Multi-Tenancy and Scheduling](tenancy)
 * [Networking PLACEHOLDER](README.md)
 * [Scaling PLACEHOLDER](README.md)
-* [Storage PLACEHOLDER](README.MD)
+* [Running Stateful Workloads in AKS](stateful_workloads)
