@@ -247,7 +247,7 @@ $ az network public-ip create \
   --allocation-method Static \
   --sku Standard
 
-### create the Application Gateway, if the CLI doesn't work for you then follow this tutorial https://docs.microsoft.com/en-us/azure/web-application-firewall/ag/tutorial-restrict-web-traffic-cli
+### create the Application Gateway, we will create an empty gateway and we will update the backend pool later when we create our first application
 ### I'm creating a plain HTTP WAF for demo purposes only, in your case this would be TLS
 
 $ az network application-gateway create \
@@ -264,7 +264,15 @@ $ az network application-gateway create \
   --http-settings-protocol Http \
   --public-ip-address $APPGW_PIP_NAME
 
-#we leave things here and we carry on with the rest until we have an AKS cluster with a service so we can create the backend pool
+### update the WAF rules
+az network application-gateway waf-config set \
+  --enabled true \
+  --gateway-name $APPGW_NAME \
+  --resource-group $RG \
+  --firewall-mode Detection \
+  --rule-set-version 3.0
+
+###we leave things here and we carry on with the rest until we have an AKS cluster with a service so we can create the backend pool
 
 ```
 
@@ -272,7 +280,7 @@ $ az network application-gateway create \
     
 
 ```shell
-### first we create the SP that we will use and assignt permissions on the VNET
+### first we create the SP that we will use and assign permissions on the VNET
 $ az ad sp create-for-rbac -n "webinarsp" --skip-assignment
 
 ###save the output from the previous commands into variables 
@@ -319,7 +327,7 @@ $ az aks get-credentials -n $AKS_CLUSTER_NAME -g $RG
 $ kubectl get nodes  
 ```
 
-5. Create the jump box in the management  subnet so we access the cluster from there too
+5. Create the jump box in the management  subnet so we access the cluster from there too (You can skip this part if you're not interested)
 
 ```shell
 
@@ -414,6 +422,9 @@ $ kubectl get svc internal-app
 NAME           TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)        AGE
 internal-app   LoadBalancer   10.0.206.249   192.168.34.4   80:30888/TCP   8m47s
 
+### save the IP of the EXTERNAL_IP of the service
+$ EXTERNAL_ILB_IP=192.168.34.4
+
 ###create the application
 $ kubectl create -f example_app.yaml
 
@@ -426,21 +437,60 @@ internal-app-68d6845766-wmfkq      1/1     Running   0          116m
 
 7. lets configure APP GW and test
 
-I'll be using the Portal to illustrate the configuration
-
-The Backend pool configuration is the AKS Service Internal IP Address
-![backend](backend.png)
-
-The HTTP settings 
-![httpsettigs](httpsettings.png)
-
-The listener configuration (Port 80)
-![listner](listener.png)
-
+```shell
+### now we need to update the backend pool of the APP GW with our service EXTERNAL IP
+$ az network application-gateway address-pool update \
+ --servers $EXTERNAL_ILB_IP \
+ --gateway-name $WAF_NAME \
+ -g $RG \
+ -n appGatewayBackendPool
+```
 
 8. All goes well, we can test the setup
 
-Open you browser and go to http://Public.Ip.of.APPGW you should see the below
+```shell
+### get the Public IP of the APP GW
+$ WAF_PUBLIC_IP=$(az network public-ip show --resource-group $RG --name $APPGW_PIP_NAME --query [ipAddress] --output tsv)
+
+### test using Curl 
+$ curl $APPGW_PIP_NAME
+
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/default.css">
+    <title>Azure Voting App</title>
+
+    <script language="JavaScript">
+        function send(form){
+        }
+    </script>
+
+</head>
+<body>
+    <div id="container">
+        <form id="form" name="form" action="/"" method="post"><center>
+        <div id="logo">Azure Voting App</div>
+        <div id="space"></div>
+        <div id="form">
+        <button name="vote" value="Cats" onclick="send()" class="button button1">Cats</button>
+        <button name="vote" value="Dogs" onclick="send()" class="button button2">Dogs</button>
+        <button name="vote" value="reset" onclick="send()" class="button button3">Reset</button>
+        <div id="space"></div>
+        <div id="space"></div>
+        <div id="results"> Cats - 0 | Dogs - 0 </div> 
+        </form>        
+        </div>
+    </div>     
+</body>
+</html>
+
+
+```
+
+OR Open you browser and go to http://Public.Ip.of.APPGW you should see the below
 ![app](testapp.png)
 
 
