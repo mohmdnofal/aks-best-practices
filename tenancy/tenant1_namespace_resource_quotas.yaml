@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: tenant1-compute-resources-limits
+spec:
+  hard:
+    requests.cpu: "3"
+    requests.memory: 3000M
+    limits.cpu: "3"
+    limits.memory: 3000M
+    
