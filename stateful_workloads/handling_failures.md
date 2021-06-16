@@ -11,7 +11,9 @@ In this simulation, we will take out a full zone from the cluster and see how th
 
 
 Below video shows how we can do this, follow the instructions underneath if you want to do the same. 
-[Placehodler]
+
+https://user-images.githubusercontent.com/12148324/122196307-6ed88800-ce97-11eb-9da3-d8f89704764f.mov
+
 
 
 ## Instructions (Simulate a zone failure)
