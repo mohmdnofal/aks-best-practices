@@ -54,7 +54,7 @@ $ az aks upgrade \
 ```
 
 ##Below video is an illustration for the process (feel free to play at max possible speed)
-![](control_plane_upgrade_small.mov)
+![Upgrade Control Plane](control_plane_upgrade_small.mov)
 - Create a new node pool with the new version (same labels, same taints)
 
 #lets add a new node pool called (espoolz1v2) to the first zone with new k8s version 1.21.1
@@ -222,7 +222,7 @@ $ az aks upgrade \
 ```
 
 ##Below video is an illustration for the process (feel free to play at max possible speed)
-![](control_plane_upgrade_small.mov)
+![Upgrade Control Plane](control_plane_upgrade_small.mov)
 
 - We upgrade the node pools, we will go on a per node-pool basis, we finish one and then move to the next
 ```shell
