@@ -1,0 +1,11 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: es-storageclass
+parameters:
+  kind: Managed #we will use Azure managed disks
+  storageaccounttype: Premium_LRS #use premium managed disk
+  tags: costcenter=dev,app=elasticsearch  #add tags so all disks related to our application are tagged
+provisioner: kubernetes.io/azure-disk
+reclaimPolicy: Retain #changed from default "Delete" to "Retain" so we can retain the disks even if the claim is deleted
+volumeBindingMode: WaitForFirstConsumer
