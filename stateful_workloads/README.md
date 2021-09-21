@@ -9,3 +9,4 @@ If you're interested in the slides, then please access them [here](stateful_ha_a
 * [Deploy Elastic Search Cluster](deploy_elasticsearch.md)
 * [Handling Failures](handling_failures.md)
 * [Handling cluster upgrades](handling_upgrades.md)
+* [Zone Redundant Disks](zrs/README.md)
