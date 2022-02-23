@@ -274,11 +274,11 @@ EOF
 brew install velero
 
 
-#install velero in the cluster, this will install velero deployment along with all the required role assignments and a bunch of CRDs
+#install velero in the cluster, this will install velero deployment along with all the required role assignments and a bunch of CRDs, note the version, this is needed to support CSI and ZRS, v1.2 doesn't
 
 velero install \
     --provider azure \
-    --plugins velero/velero-plugin-for-microsoft-azure:v1.2.0 \
+    --plugins velero/velero-plugin-for-microsoft-azure:v1.4.0-rc.1 \
     --bucket $BLOB_CONTAINER \
     --secret-file ./credentials-velero \
     --backup-location-config resourceGroup=$AZURE_BACKUP_RESOURCE_GROUP,storageAccount=$AZURE_STORAGE_ACCOUNT_ID,subscriptionId=$AZURE_BACKUP_SUBSCRIPTION_ID \
@@ -333,7 +333,7 @@ kubectl get volumesnapshotlocations.velero.io -n velero -o yaml
 #now that velero is up and running lets test backup and restore 
 
 #as our default namespace only has the mysql deployment, we will backup the whole namespace 
-velero backup create mysql-backup-v1 --include-namespaces default
+velero backup create mysql-backup-v1 --selector app=mysql
 
 #check your backup (you should see in progress and after few seconds you shuold see completed)
 velero backup describe mysql-backup-v1
