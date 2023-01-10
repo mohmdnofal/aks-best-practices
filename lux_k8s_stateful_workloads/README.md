@@ -1,5 +1,7 @@
 # Introduction
 
+*Slides* can be found (here)[https://github.com/mohmdnofal/aks-best-practices/blob/master/lux_k8s_stateful_workloads/slides/building_resilient_stateful_apps_k8s_100123.pdf] 
+
 *Note* This walkthrough been updated based on the latest work done by my colleague Steve Griffith [here](https://github.com/swgriffith/azure-guides/tree/master/aks-kasten)
 
 We will start by creating a cluster, the cluster will be spun up as below:
