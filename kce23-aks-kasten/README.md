@@ -550,13 +550,11 @@ kubectl delete pod -n elasticsearch elasticsearch-v1-data-5
 
 ```
 
-```
-Video Demonestration 
+
+**Video Demonestration **
 
 https://user-images.githubusercontent.com/12148324/232738664-f012e640-5f55-4dc1-9833-58906f4c20f8.mp4
 
-
-```
 
 
 Now lets work on application data recovery! We need to install Kasten!!!
