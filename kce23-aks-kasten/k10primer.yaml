@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k10-primer
+  namespace: default
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: k10-primer
+subjects:
+  - kind: ServiceAccount
+    name: k10-primer
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: k10primer
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - image: gcr.io/kasten-images/k10tools:5.5.8
+        imagePullPolicy: IfNotPresent
+        name: k10primer
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "K10_PRIMER_CONFIG_YAML=$(echo $K10_PRIMER_CONFIG_YAML_ENCODED | base64 --decode) ./k10tools primer ; sleep 2" ]
+        env:
+          - name: K10_PRIMER_CONFIG_YAML_ENCODED
+            value: 
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_SERVICE_ACCOUNT
+            value: k10-primer
+          - name: KANISTER_TOOLS
+            value: ghcr.io/kanisterio/kanister-tools:0.90.0
+      restartPolicy: Never
+      serviceAccount: k10-primer
+  backoffLimit: 4
