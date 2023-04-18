@@ -1,6 +1,6 @@
 # Introduction
 
-*Slides* can be found [here](https://github.com/mohmdnofal/aks-best-practices/blob/master/lux_k8s_stateful_workloads/slides/building_resilient_stateful_apps_k8s_100123.pdf)
+*Slides* can be found [here](https://github.com/mohmdnofal/aks-best-practices/blob/master/kce23-aks-kasten/aks_kasten_180423.pdf)
 
 *Note* This walkthrough been updated based on the latest work done by my colleague Steve Griffith [here](https://github.com/swgriffith/azure-guides/tree/master/aks-kasten)
 
