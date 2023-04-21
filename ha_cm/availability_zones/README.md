@@ -36,7 +36,7 @@ $ az aks get-credentials --resource-group $rg --name $clustername
 2. Verify the nodes are spread across AZs (you can remove the '-l agentpool=nodes1')
 
 ```shell
-$ kubectl describe nodes -l agentpool=nodes1 | grep -e "Name:" -e "failure-domain.beta.kubernetes.io/zone"
+$ kubectl describe nodes -l agentpool=nodepool1 | grep -e "Labels:" -e "failure-domain.beta.kubernetes.io/zone"
 Name:               aks-nodes1-14441868-vmss000000
                     failure-domain.beta.kubernetes.io/zone=westeurope-1
 Name:               aks-nodes1-14441868-vmss000001
