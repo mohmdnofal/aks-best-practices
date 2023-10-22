@@ -1,0 +1,12 @@
+apiVersion: containerstorage.azure.com/v1beta1
+kind: StoragePool
+metadata:
+  name: azuredisk
+  namespace: acstor
+spec:
+  poolType:
+    azureDisk:
+      skuName: Premium_LRS
+  resources:
+    requests:
+      storage: 1Ti

@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: log-ingestion-job
+spec:
+  parallelism: 1  # Specify the number of desired pods
+  completions: 2  # Adjust as needed
+  template:
+    metadata:
+      labels:
+        app: log-ingestion
+    spec:
+      containers:
+      - name: log-ingestion-container
+        image: mohamman/my-ingest-image:6.0   ###update to your image name 
+      restartPolicy: Never
